@@ -1,0 +1,11 @@
+--- elogind-219.12/Makefile.am.orig	2015-09-01 13:19:31.000000000 +0200
++++ elogind-219.12/Makefile.am	2017-06-07 18:02:28.097466054 +0200
+@@ -501,6 +501,8 @@
+ 
+ libelogind_shared_la_LIBADD = \
+ 	$(CAP_LIBS) \
++	$(SELINUX_LIBS) \
++	-lrt \
+ 	-lm
+ 
+ libelogind_shared_la_LDFLAGS = \
