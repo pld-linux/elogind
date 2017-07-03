@@ -9,6 +9,8 @@ Group:		Daemons
 Source0:	https://github.com/wingo/elogind/archive/v%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	00348e7a6a995ce918301d3dd64e01a6
 Patch0:		%{name}-link.patch
+Patch1:		https://patch-diff.githubusercontent.com/raw/wingo/elogind/pull/7.diff
+# Patch1-md5:	cdc574ea8bd040303e02465a7e75c510
 URL:		https://github.com/wingo/elogind
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.64
@@ -116,6 +118,7 @@ Pliki nagłówkowe biblioteki elogind.
 %prep
 %setup -q
 %patch0 -p1
+%patch1 -p1
 
 %build
 install -d docs
