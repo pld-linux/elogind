@@ -1,17 +1,14 @@
 Summary:	Elogind User, Seat and Session Manager
 Summary(pl.UTF-8):	Elogind - zarządca użytkowników, stanowisk i sesji
 Name:		elogind
-Version:	219.12
-Release:	1
+Version:	231.3
+Release:	0.1
 License:	LGPL v2.1+
 Group:		Daemons
-#Source0Download: https://github.com/wingo/elogind/releases
-Source0:	https://github.com/wingo/elogind/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	00348e7a6a995ce918301d3dd64e01a6
-Patch0:		%{name}-link.patch
-Patch1:		https://patch-diff.githubusercontent.com/raw/wingo/elogind/pull/7.diff
-# Patch1-md5:	cdc574ea8bd040303e02465a7e75c510
-URL:		https://github.com/wingo/elogind
+# Source0Download: https://github.com/elogind/elogind/releases
+Source0:	https://github.com/elogind/elogind/archive/v%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	ffc16ab3ae77254cc3d02af37ea463bb
+URL:		https://github.com/elogind/elogind
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
@@ -24,14 +21,14 @@ BuildRequires:	intltool >= 0.40.0
 BuildRequires:	libapparmor-devel
 BuildRequires:	libblkid-devel >= 2.24
 BuildRequires:	libcap-devel
-BuildRequires:	libseccomp-devel >= 1.0.0
 BuildRequires:	libmount-devel >= 2.20
+BuildRequires:	libseccomp-devel >= 1.0.0
 BuildRequires:	libselinux-devel >= 2.1.9
 BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libxslt-progs
 BuildRequires:	pam-devel >= 1:1.1.2
 BuildRequires:	pkgconfig
-BuildRequires:	rpmbuild(macros) >= 1.673
+BuildRequires:	rpmbuild(macros) >= 1.719
 BuildRequires:	udev-devel
 Requires:	%{name}-libs = %{version}-%{release}
 Conflicts:	systemd
@@ -41,10 +38,10 @@ BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 Elogind is the systemd project's "logind", extracted out to be a
 standalone daemon. It integrates with PAM to know the set of users
 that are logged in to a system and whether they are logged in
-graphically, on the console, or remotely.  Elogind exposes this
+graphically, on the console, or remotely. Elogind exposes this
 information via the standard org.freedesktop.login1 D-Bus interface,
 as well as through the file system using systemd's standard
-/run/systemd layout.  Elogind also provides "libelogind", which is a
+/run/systemd layout. Elogind also provides "libelogind", which is a
 subset of the facilities offered by "libsystemd".
 
 %description -l pl.UTF-8
@@ -117,12 +114,10 @@ Pliki nagłówkowe biblioteki elogind.
 
 %prep
 %setup -q
-%patch0 -p1
-%patch1 -p1
 
 %build
-install -d docs
-%{__gtkdocize} --docdir docs --flavour no-tmpl
+#install -d docs
+#%{__gtkdocize} --docdir docs --flavour no-tmpl
 %{__intltoolize}
 %{__libtoolize}
 %{__aclocal} -I m4
@@ -149,13 +144,13 @@ rm -rf $RPM_BUILD_ROOT
 	$RPM_BUILD_ROOT/%{_lib}/security/*.la
 
 # provided by systemd-devel
-%{__rm} $RPM_BUILD_ROOT%{_mandir}/man3/sd-login.3 \
-	$RPM_BUILD_ROOT%{_mandir}/man3/sd_*.3
-# dead link to logind.service.8
-%{__rm} $RPM_BUILD_ROOT%{_mandir}/man8/logind.8
+%{__rm} \
+	$RPM_BUILD_ROOT%{_mandir}/man3/SD_*.3 \
+	$RPM_BUILD_ROOT%{_mandir}/man3/sd_*.3 \
+	$RPM_BUILD_ROOT%{_mandir}/man3/sd-*.3
 
 # packaged as %doc
-%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/elogind
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
 
 %find_lang %{name}
 
@@ -178,16 +173,19 @@ rm -rf $RPM_BUILD_ROOT
 /lib/udev/rules.d/73-seat-late.rules
 %attr(755,root,root) /%{_lib}/security/pam_elogind.so
 %attr(755,root,root) %{_bindir}/loginctl
-%attr(755,root,root) %{_bindir}/systemd-inhibit
+%attr(755,root,root) %{_bindir}/elogind-inhibit
 %dir %{_libexecdir}/elogind
 %attr(755,root,root) %{_libexecdir}/elogind/elogind
+%attr(755,root,root) %{_libexecdir}/elogind/elogind-cgroups-agent
 %{_datadir}/dbus-1/system-services/org.freedesktop.login1.service
 %{_datadir}/factory/etc/pam.d/other
 %{_datadir}/factory/etc/pam.d/system-auth
 %{_datadir}/polkit-1/actions/org.freedesktop.login1.policy
 %{_mandir}/man1/loginctl.1*
 %{_mandir}/man5/logind.conf.5*
-%{_mandir}/man5/logind.conf.d.5*
+%{_mandir}/man7/elogind.directives.7*
+%{_mandir}/man7/elogind.index.7*
+%{_mandir}/man8/elogind.8*
 %{_mandir}/man8/pam_elogind.8*
 
 %files -n bash-completion-elogind
@@ -196,7 +194,8 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n zsh-completion-elogind
 %defattr(644,root,root,755)
-%{_datadir}/zsh/site-functions/_loginctl
+%{zsh_compdir}/_elogind-inhibit
+%{zsh_compdir}/_loginctl
 
 %files libs
 %defattr(644,root,root,755)
