@@ -13,7 +13,7 @@ URL:		https://github.com/wingo/elogind
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
-BuildRequires:	dbus-devel >= 1.3.2
+BuildRequires:	dbus-devel >= 1.4.0
 BuildRequires:	gcc >= 5:3.2
 BuildRequires:	glib2-devel >= 1:2.22.0
 BuildRequires:	gperf
@@ -23,10 +23,11 @@ BuildRequires:	libapparmor-devel
 BuildRequires:	libblkid-devel >= 2.24
 BuildRequires:	libcap-devel
 BuildRequires:	libseccomp-devel >= 1.0.0
+BuildRequires:	libmount-devel >= 2.20
 BuildRequires:	libselinux-devel >= 2.1.9
 BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libxslt-progs
-BuildRequires:	pam-devel
+BuildRequires:	pam-devel >= 1:1.1.2
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.673
 BuildRequires:	udev-devel
@@ -92,6 +93,7 @@ Uzupełnianie parametrów w zsh dla polecenia loginctl.
 Summary:	Shared elogind library
 Summary(pl.UTF-8):	Biblioteka współdzielona elogind
 Group:		Libraries
+Requires:	dbus >= 1.4.0
 
 %description libs
 Shared elogind library.
