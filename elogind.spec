@@ -2,7 +2,7 @@ Summary:	Elogind User, Seat and Session Manager
 Summary(pl.UTF-8):	Elogind - zarządca użytkowników, stanowisk i sesji
 Name:		elogind
 Version:	231.3
-Release:	0.2
+Release:	0.3
 License:	LGPL v2.1+
 Group:		Daemons
 # Source0Download: https://github.com/elogind/elogind/releases
@@ -32,6 +32,7 @@ BuildRequires:	rpmbuild(macros) >= 1.719
 BuildRequires:	udev-devel
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dbus >= 1.4.0
+Requires:	pam >= 1:1.3.0-3
 Requires:	udev-core >= 1:185
 Conflicts:	systemd
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
