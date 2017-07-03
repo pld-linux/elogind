@@ -2,7 +2,7 @@ Summary:	Elogind User, Seat and Session Manager
 Summary(pl.UTF-8):	Elogind - zarządca użytkowników, stanowisk i sesji
 Name:		elogind
 Version:	231.3
-Release:	0.1
+Release:	0.2
 License:	LGPL v2.1+
 Group:		Daemons
 # Source0Download: https://github.com/elogind/elogind/releases
@@ -31,6 +31,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.719
 BuildRequires:	udev-devel
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	udev-core >= 1:185
 Conflicts:	systemd
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -149,6 +150,9 @@ rm -rf $RPM_BUILD_ROOT
 	$RPM_BUILD_ROOT%{_mandir}/man3/sd_*.3 \
 	$RPM_BUILD_ROOT%{_mandir}/man3/sd-*.3
 
+# provided by udev-core
+%{__rm} $RPM_BUILD_ROOT/lib/udev/rules.d/70-power-switch.rules
+
 # packaged as %doc
 %{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
 
@@ -167,7 +171,6 @@ rm -rf $RPM_BUILD_ROOT
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/elogind/logind.conf
 /etc/dbus-1/system.d/org.freedesktop.login1.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/pam.d/elogind-user
-/lib/udev/rules.d/70-power-switch.rules
 /lib/udev/rules.d/70-uaccess.rules
 /lib/udev/rules.d/71-seat.rules
 /lib/udev/rules.d/73-seat-late.rules
