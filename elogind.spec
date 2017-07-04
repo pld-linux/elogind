@@ -31,6 +31,7 @@ BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.719
 BuildRequires:	udev-devel
 Requires:	%{name}-libs = %{version}-%{release}
+Requires:	dbus >= 1.4.0
 Requires:	udev-core >= 1:185
 Conflicts:	systemd
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -93,7 +94,6 @@ Uzupełnianie parametrów w zsh dla polecenia loginctl.
 Summary:	Shared elogind library
 Summary(pl.UTF-8):	Biblioteka współdzielona elogind
 Group:		Libraries
-Requires:	dbus >= 1.4.0
 
 %description libs
 Shared elogind library.
