@@ -1,13 +1,13 @@
 Summary:	Elogind User, Seat and Session Manager
 Summary(pl.UTF-8):	Elogind - zarządca użytkowników, stanowisk i sesji
 Name:		elogind
-Version:	231.3
-Release:	0.3
+Version:	234.2
+Release:	0.1
 License:	LGPL v2.1+
 Group:		Daemons
 # Source0Download: https://github.com/elogind/elogind/releases
 Source0:	https://github.com/elogind/elogind/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	ffc16ab3ae77254cc3d02af37ea463bb
+# Source0-md5:	d3c52e4af85dddeb3d323a18c341164f
 URL:		https://github.com/elogind/elogind
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.64
@@ -132,6 +132,7 @@ Pliki nagłówkowe biblioteki elogind.
 	REBOOT=/sbin/reboot \
 	--disable-silent-rules \
 	--enable-split-usr \
+	--with-rootlibexecdir=%{_libexecdir}/%{name} \
 	--with-pamlibdir=/%{_lib}/security
 
 %{__make}
@@ -167,10 +168,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc LICENSE.MIT NEWS README TODO src/libelogind/sd-bus/{DIFFERENCES,GVARIANT-SERIALIZATION,PORTING-DBUS1}
+%doc LICENSE.MIT NEWS README TODO src/libelogind/sd-bus/GVARIANT-SERIALIZATION
 %dir %{_sysconfdir}/elogind
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/elogind/logind.conf
-/etc/dbus-1/system.d/org.freedesktop.login1.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/pam.d/elogind-user
 /lib/udev/rules.d/70-uaccess.rules
 /lib/udev/rules.d/71-seat.rules
@@ -182,13 +182,12 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libexecdir}/elogind/elogind
 %attr(755,root,root) %{_libexecdir}/elogind/elogind-cgroups-agent
 %{_datadir}/dbus-1/system-services/org.freedesktop.login1.service
+%{_datadir}/dbus-1/system.d/org.freedesktop.login1.conf
 %{_datadir}/factory/etc/pam.d/other
 %{_datadir}/factory/etc/pam.d/system-auth
 %{_datadir}/polkit-1/actions/org.freedesktop.login1.policy
 %{_mandir}/man1/loginctl.1*
 %{_mandir}/man5/logind.conf.5*
-%{_mandir}/man7/elogind.directives.7*
-%{_mandir}/man7/elogind.index.7*
 %{_mandir}/man8/elogind.8*
 %{_mandir}/man8/pam_elogind.8*
 
