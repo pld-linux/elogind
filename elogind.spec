@@ -12,6 +12,7 @@ Patch0:		%{name}-service.patch
 URL:		https://github.com/elogind/elogind
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.64
+BuildRequires:	autoconf-archive
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	dbus-devel >= 1.4.0
 BuildRequires:	docbook-dtd42-xml
