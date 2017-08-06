@@ -14,7 +14,10 @@ BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.64
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	dbus-devel >= 1.4.0
+BuildRequires:	docbook-dtd42-xml
+BuildRequires:	docbook-dtd45-xml
 BuildRequires:	gcc >= 5:3.2
+BuildRequires:	gettext-devel
 BuildRequires:	glib2-devel >= 1:2.22.0
 BuildRequires:	gperf
 BuildRequires:	gtk-doc >= 1.18
