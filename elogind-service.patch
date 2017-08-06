@@ -1,0 +1,15 @@
+
+start the daemon via dbus activation
+
+https://github.com/elogind/elogind/issues/25
+
+--- elogind-234.2/src/login/org.freedesktop.login1.service~	2017-07-28 10:38:57.000000000 +0300
++++ elogind-234.2/src/login/org.freedesktop.login1.service	2017-08-06 10:31:26.815479309 +0300
+@@ -7,6 +7,6 @@
+ 
+ [D-BUS Service]
+ Name=org.freedesktop.login1
+-Exec=/bin/false
++Exec=@elogind@
+ User=root
+ SystemdService=dbus-org.freedesktop.login1.service
