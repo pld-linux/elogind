@@ -2,13 +2,13 @@ Summary:	Elogind User, Seat and Session Manager
 Summary(pl.UTF-8):	Elogind - zarządca użytkowników, stanowisk i sesji
 Name:		elogind
 Version:	234.2
-Release:	1
+Release:	1.1
 License:	LGPL v2.1+
 Group:		Daemons
 # Source0Download: https://github.com/elogind/elogind/releases
 Source0:	https://github.com/elogind/elogind/archive/v%{version}/%{name}-%{version}.tar.gz
 # Source0-md5:	d3c52e4af85dddeb3d323a18c341164f
-Patch0:		%{name}-service.patch
+Source1:	%{name}.init
 URL:		https://github.com/elogind/elogind
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.64
@@ -35,9 +35,11 @@ BuildRequires:	pam-devel >= 1:1.1.2
 BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.719
 BuildRequires:	udev-devel
+Requires(post,preun):	/sbin/chkconfig
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dbus >= 1.4.0
 Requires:	pam >= 1:1.3.0-3
+Requires:	rc-scripts
 Requires:	udev-core >= 1:185
 Conflicts:	systemd
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -121,7 +123,6 @@ Pliki nagłówkowe biblioteki elogind.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 #install -d docs
@@ -145,9 +146,11 @@ Pliki nagłówkowe biblioteki elogind.
 
 %install
 rm -rf $RPM_BUILD_ROOT
-
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
+install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libelogind.la \
 	$RPM_BUILD_ROOT/%{_lib}/security/*.la
@@ -172,6 +175,16 @@ rm -rf $RPM_BUILD_ROOT
 %clean
 rm -rf $RPM_BUILD_ROOT
 
+%post
+/sbin/chkconfig --add %{name}
+%service %{name} restart
+
+%preun
+if [ "$1" = "0" ]; then
+	%service -q %{name} stop
+	/sbin/chkconfig --del %{name}
+fi
+
 %post	libs -p /sbin/ldconfig
 %postun	libs -p /sbin/ldconfig
 
@@ -184,6 +197,7 @@ rm -rf $RPM_BUILD_ROOT
 /lib/udev/rules.d/70-uaccess.rules
 /lib/udev/rules.d/71-seat.rules
 /lib/udev/rules.d/73-seat-late.rules
+%attr(754,root,root) /etc/rc.d/init.d/%{name}
 %attr(755,root,root) /%{_lib}/security/pam_elogind.so
 %attr(755,root,root) %{_bindir}/loginctl
 %attr(755,root,root) %{_bindir}/elogind-inhibit
