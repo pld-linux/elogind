@@ -2,7 +2,7 @@ Summary:	Elogind User, Seat and Session Manager
 Summary(pl.UTF-8):	Elogind - zarządca użytkowników, stanowisk i sesji
 Name:		elogind
 Version:	234.2
-Release:	1.1
+Release:	1.2
 License:	LGPL v2.1+
 Group:		Daemons
 # Source0Download: https://github.com/elogind/elogind/releases
@@ -151,12 +151,10 @@ rm -rf $RPM_BUILD_ROOT
 
 install -d $RPM_BUILD_ROOT/etc/rc.d/init.d
 install -p %{SOURCE1} $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
+%{__sed} -i -e 's,@libexecdir@,%{_libexecdir}/%{name},' $RPM_BUILD_ROOT/etc/rc.d/init.d/%{name}
 
 %{__rm} $RPM_BUILD_ROOT%{_libdir}/libelogind.la \
 	$RPM_BUILD_ROOT/%{_lib}/security/*.la
-
-%{__sed} -i -e 's,@elogind@,%{_libexecdir}/%{name}/elogind,' \
-	$RPM_BUILD_ROOT%{_datadir}/dbus-1/system-services/org.freedesktop.login1.service
 
 # provided by systemd-devel
 %{__rm} \
