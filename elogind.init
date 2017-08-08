@@ -2,10 +2,9 @@
 #
 # elogind	elogind short service description
 #
-# chkconfig:	345 10 90
+# chkconfig:	345 25 75
 #
 # description:	elogind long service description
-#
 # processname:	elogind
 
 # Source function library
