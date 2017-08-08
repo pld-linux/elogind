@@ -63,11 +63,17 @@ condrestart() {
 	fi
 
 	stop
+	# some race condition
+	# https://github.com/elogind/elogind/issues/25#issuecomment-320990445
+	sleep 1
 	start
 }
 
 restart() {
 	stop
+	# some race condition
+	# https://github.com/elogind/elogind/issues/25#issuecomment-320990445
+	sleep 1
 	start
 }
 
