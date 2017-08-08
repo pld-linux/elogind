@@ -37,7 +37,7 @@ start() {
 	fi
 
 	msg_starting "elogind"
-	daemon /usr/lib64/elogind/elogind
+	daemon --fork --pidfile $pidfile --makepid /usr/lib64/elogind/elogind
 	RETVAL=$?
 	[ $RETVAL -eq 0 ] && touch /var/lock/subsys/elogind
 }
