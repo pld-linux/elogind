@@ -10,19 +10,6 @@
 # Source function library
 . /etc/rc.d/init.d/functions
 
-# Get network config
-. /etc/sysconfig/network
-
-# Check that networking is up.
-if is_yes "${NETWORKING}"; then
-	if [ ! -f /var/lock/subsys/network -a "$1" != stop -a "$1" != status ]; then
-		msg_network_down "elogind"
-		exit 1
-	fi
-else
-	exit 0
-fi
-
 # Get service config - may override defaults
 [ -f /etc/sysconfig/elogind ] && . /etc/sysconfig/elogind
 
