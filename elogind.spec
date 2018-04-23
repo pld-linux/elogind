@@ -1,14 +1,14 @@
 Summary:	Elogind User, Seat and Session Manager
 Summary(pl.UTF-8):	Elogind - zarządca użytkowników, stanowisk i sesji
 Name:		elogind
-Version:	234.2
+Version:	235.3
 Release:	1
 License:	LGPL v2.1+
 Group:		Daemons
 # Source0Download: https://github.com/elogind/elogind/releases
 Source0:	https://github.com/elogind/elogind/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	d3c52e4af85dddeb3d323a18c341164f
-Patch0:		%{name}-service.patch
+# Source0-md5:	9e3dea2785fb32c9b83b9db06742db44
+Patch0:		%{name}-glibc-2.27.patch
 URL:		https://github.com/elogind/elogind
 BuildRequires:	acl-devel
 BuildRequires:	autoconf >= 2.64
@@ -41,6 +41,8 @@ Requires:	pam >= 1:1.3.0-3
 Requires:	udev-core >= 1:185
 Conflicts:	systemd
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
+
+%define		_rootbindir	/bin
 
 %description
 Elogind is the systemd project's "logind", extracted out to be a
@@ -124,33 +126,24 @@ Pliki nagłówkowe biblioteki elogind.
 %patch0 -p1
 
 %build
-#install -d docs
-#%{__gtkdocize} --docdir docs --flavour no-tmpl
-%{__intltoolize}
-%{__libtoolize}
-%{__aclocal} -I m4
-%{__autoconf}
-%{__autoheader}
-%{__automake}
-%configure \
-	HALT=/sbin/halt \
-	KEXEC=/sbin/kexec \
-	REBOOT=/sbin/reboot \
-	--disable-silent-rules \
-	--enable-split-usr \
-	--with-rootlibexecdir=%{_libexecdir}/%{name} \
-	--with-pamlibdir=/%{_lib}/security
+%meson build \
+	-Dhalt-path=/sbin/halt \
+	-Dkexec-path=/sbin/kexec \
+	-Dreboot-path=/sbin/reboot \
+	-Dpamlibdir=/%{_lib}/security \
+	-Drootlibdir=%{_libdir} \
+	-Drootlibexecdir=%{_libexecdir}/%{name} \
+	-Dsplit-usr=true
 
-%{__make}
+%meson_build -C build
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%{__make} install \
-	DESTDIR=$RPM_BUILD_ROOT
+%meson_install -C build
 
-%{__rm} $RPM_BUILD_ROOT%{_libdir}/libelogind.la \
-	$RPM_BUILD_ROOT/%{_lib}/security/*.la
+#%{__rm} $RPM_BUILD_ROOT%{_libdir}/libelogind.la \
+#	$RPM_BUILD_ROOT/%{_lib}/security/*.la
 
 %{__sed} -i -e 's,@elogind@,%{_libexecdir}/%{name}/elogind,' \
 	$RPM_BUILD_ROOT%{_datadir}/dbus-1/system-services/org.freedesktop.login1.service
@@ -165,7 +158,7 @@ rm -rf $RPM_BUILD_ROOT
 %{__rm} $RPM_BUILD_ROOT/lib/udev/rules.d/70-power-switch.rules
 
 # packaged as %doc
-%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
+#%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
 
 %find_lang %{name}
 
@@ -177,7 +170,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc LICENSE.MIT NEWS README TODO src/libelogind/sd-bus/GVARIANT-SERIALIZATION
+%doc NEWS README TODO src/libelogind/sd-bus/GVARIANT-SERIALIZATION
 %dir %{_sysconfdir}/elogind
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/elogind/logind.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/pam.d/elogind-user
@@ -185,11 +178,13 @@ rm -rf $RPM_BUILD_ROOT
 /lib/udev/rules.d/71-seat.rules
 /lib/udev/rules.d/73-seat-late.rules
 %attr(755,root,root) /%{_lib}/security/pam_elogind.so
-%attr(755,root,root) %{_bindir}/loginctl
-%attr(755,root,root) %{_bindir}/elogind-inhibit
+%attr(755,root,root) %{_rootbindir}/loginctl
+%attr(755,root,root) %{_rootbindir}/elogind-inhibit
 %dir %{_libexecdir}/elogind
 %attr(755,root,root) %{_libexecdir}/elogind/elogind
 %attr(755,root,root) %{_libexecdir}/elogind/elogind-cgroups-agent
+%attr(755,root,root) %{_libexecdir}/elogind/elogind-uaccess-command
+%attr(755,root,root) %{_libexecdir}/elogind/libelogind-shared-%{version}.so
 %{_datadir}/dbus-1/system-services/org.freedesktop.login1.service
 %{_datadir}/dbus-1/system.d/org.freedesktop.login1.conf
 %{_datadir}/factory/etc/pam.d/other
@@ -206,7 +201,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -n zsh-completion-elogind
 %defattr(644,root,root,755)
-%{zsh_compdir}/_elogind-inhibit
+#%{zsh_compdir}/_elogind-inhibit
 %{zsh_compdir}/_loginctl
 
 %files libs
