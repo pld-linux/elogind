@@ -142,9 +142,6 @@ rm -rf $RPM_BUILD_ROOT
 
 %meson_install -C build
 
-#%{__rm} $RPM_BUILD_ROOT%{_libdir}/libelogind.la \
-#	$RPM_BUILD_ROOT/%{_lib}/security/*.la
-
 %{__sed} -i -e 's,@elogind@,%{_libexecdir}/%{name}/elogind,' \
 	$RPM_BUILD_ROOT%{_datadir}/dbus-1/system-services/org.freedesktop.login1.service
 
@@ -156,9 +153,6 @@ rm -rf $RPM_BUILD_ROOT
 
 # provided by udev-core
 %{__rm} $RPM_BUILD_ROOT/lib/udev/rules.d/70-power-switch.rules
-
-# packaged as %doc
-#%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}
 
 %find_lang %{name}
 
