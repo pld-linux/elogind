@@ -31,9 +31,10 @@ BuildRequires:	libseccomp-devel >= 1.0.0
 BuildRequires:	libselinux-devel >= 2.1.9
 BuildRequires:	libtool >= 2:2.2
 BuildRequires:	libxslt-progs
+BuildRequires:	meson
 BuildRequires:	pam-devel >= 1:1.1.2
 BuildRequires:	pkgconfig
-BuildRequires:	rpmbuild(macros) >= 1.719
+BuildRequires:	rpmbuild(macros) >= 1.727
 BuildRequires:	udev-devel
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dbus >= 1.4.0
