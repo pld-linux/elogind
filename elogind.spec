@@ -11,31 +11,16 @@ Source0:	https://github.com/elogind/elogind/archive/v%{version}/%{name}-%{versio
 Patch0:		%{name}-glibc-2.27.patch
 URL:		https://github.com/elogind/elogind
 BuildRequires:	acl-devel
-BuildRequires:	autoconf >= 2.64
-BuildRequires:	autoconf-archive
-BuildRequires:	automake >= 1:1.11
 BuildRequires:	dbus-devel >= 1.4.0
-BuildRequires:	docbook-dtd42-xml
-BuildRequires:	docbook-dtd45-xml
 BuildRequires:	gcc >= 5:3.2
-BuildRequires:	gettext-devel
-BuildRequires:	glib2-devel >= 1:2.22.0
+BuildRequires:	gettext-tools
 BuildRequires:	gperf
-BuildRequires:	gtk-doc >= 1.18
-BuildRequires:	intltool >= 0.40.0
-BuildRequires:	libapparmor-devel
-BuildRequires:	libblkid-devel >= 2.24
 BuildRequires:	libcap-devel
-BuildRequires:	libmount-devel >= 2.20
-BuildRequires:	libseccomp-devel >= 1.0.0
 BuildRequires:	libselinux-devel >= 2.1.9
-BuildRequires:	libtool >= 2:2.2
-BuildRequires:	libxslt-progs
+BuildRequires:	m4
 BuildRequires:	meson
 BuildRequires:	pam-devel >= 1:1.1.2
-BuildRequires:	pkgconfig
 BuildRequires:	rpmbuild(macros) >= 1.727
-BuildRequires:	udev-devel
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dbus >= 1.4.0
 Requires:	pam >= 1:1.3.0-3
