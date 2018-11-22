@@ -1,28 +1,36 @@
 Summary:	Elogind User, Seat and Session Manager
 Summary(pl.UTF-8):	Elogind - zarządca użytkowników, stanowisk i sesji
 Name:		elogind
-Version:	235.3
+Version:	239.1
 Release:	1
 License:	LGPL v2.1+
 Group:		Daemons
 # Source0Download: https://github.com/elogind/elogind/releases
 Source0:	https://github.com/elogind/elogind/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	9e3dea2785fb32c9b83b9db06742db44
-Patch0:		%{name}-glibc-2.27.patch
+# Source0-md5:	14bde82c205398bc4479284a7566e31c
+Patch0:		%{name}-selinux-fix.patch
 URL:		https://github.com/elogind/elogind
 BuildRequires:	acl-devel
+BuildRequires:	audit-libs-devel
 BuildRequires:	dbus-devel >= 1.4.0
 BuildRequires:	gcc >= 5:3.2
 BuildRequires:	gettext-tools
+# checked, but finally not used
+#BuildRequires:	glib2-devel >= 1:2.22.0
 BuildRequires:	gperf
 BuildRequires:	libcap-devel
 BuildRequires:	libselinux-devel >= 2.1.9
 BuildRequires:	m4
-BuildRequires:	meson
+BuildRequires:	meson >= 0.44
+BuildRequires:	ninja
 BuildRequires:	pam-devel >= 1:1.1.2
+BuildRequires:	pcre2-8-devel
 BuildRequires:	rpmbuild(macros) >= 1.727
+BuildRequires:	udev-devel >= 1:185
+BuildConflicts:	polkit-devel < 0.106
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dbus >= 1.4.0
+Requires:	glib2 >= 1:2.22.0
 Requires:	pam >= 1:1.3.0-3
 Requires:	udev-core >= 1:185
 Conflicts:	systemd
@@ -119,6 +127,7 @@ Pliki nagłówkowe biblioteki elogind.
 	-Dpamlibdir=/%{_lib}/security \
 	-Drootlibdir=%{_libdir} \
 	-Drootlibexecdir=%{_libexecdir}/%{name} \
+	-Dsplit-bin=true \
 	-Dsplit-usr=true
 
 %meson_build -C build
@@ -128,8 +137,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %meson_install -C build
 
-%{__sed} -i -e 's,@elogind@,%{_libexecdir}/%{name}/elogind,' \
-	$RPM_BUILD_ROOT%{_datadir}/dbus-1/system-services/org.freedesktop.login1.service
+%{__rm} $RPM_BUILD_ROOT%{_libexecdir}/elogind/system-{shutdown,sleep}/.keep_dir
 
 # provided by systemd-devel
 %{__rm} \
@@ -139,6 +147,9 @@ rm -rf $RPM_BUILD_ROOT
 
 # provided by udev-core
 %{__rm} $RPM_BUILD_ROOT/lib/udev/rules.d/70-power-switch.rules
+
+# packaged as %doc
+%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
 
 %find_lang %{name}
 
@@ -165,13 +176,19 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libexecdir}/elogind/elogind-cgroups-agent
 %attr(755,root,root) %{_libexecdir}/elogind/elogind-uaccess-command
 %attr(755,root,root) %{_libexecdir}/elogind/libelogind-shared-%{version}.so
+%dir %{_libexecdir}/elogind/system-shutdown
+%dir %{_libexecdir}/elogind/system-sleep
 %{_datadir}/dbus-1/system-services/org.freedesktop.login1.service
 %{_datadir}/dbus-1/system.d/org.freedesktop.login1.conf
 %{_datadir}/factory/etc/pam.d/other
 %{_datadir}/factory/etc/pam.d/system-auth
 %{_datadir}/polkit-1/actions/org.freedesktop.login1.policy
+%{_mandir}/man1/elogind-inhibit.1*
 %{_mandir}/man1/loginctl.1*
 %{_mandir}/man5/logind.conf.5*
+%{_mandir}/man7/elogind.directives.7*
+%{_mandir}/man7/elogind.index.7*
+%{_mandir}/man7/elogind.syntax.7*
 %{_mandir}/man8/elogind.8*
 %{_mandir}/man8/pam_elogind.8*
 
