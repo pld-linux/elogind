@@ -65,9 +65,7 @@ Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	bash-completion >= 2.0
 Conflicts:	bash-completion-systemd
-%if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
-%endif
 
 %description -n bash-completion-elogind
 Bash completion for loginctl command.
@@ -82,9 +80,7 @@ Group:		Applications/Shells
 Requires:	%{name} = %{version}-%{release}
 Requires:	zsh
 Conflicts:	zsh-completion-systemd
-%if "%{_rpmversion}" >= "5"
 BuildArch:	noarch
-%endif
 
 %description -n zsh-completion-elogind
 zsh completion for loginctl command.
