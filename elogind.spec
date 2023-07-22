@@ -1,14 +1,13 @@
 Summary:	Elogind User, Seat and Session Manager
 Summary(pl.UTF-8):	Elogind - zarządca użytkowników, stanowisk i sesji
 Name:		elogind
-Version:	239.1
+Version:	252.9
 Release:	1
 License:	LGPL v2.1+
 Group:		Daemons
 # Source0Download: https://github.com/elogind/elogind/releases
 Source0:	https://github.com/elogind/elogind/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	14bde82c205398bc4479284a7566e31c
-Patch0:		%{name}-selinux-fix.patch
+# Source0-md5:	2be2c43298e2fc41c5bee33dde605f01
 URL:		https://github.com/elogind/elogind
 BuildRequires:	acl-devel
 BuildRequires:	audit-libs-devel
@@ -113,18 +112,21 @@ Pliki nagłówkowe biblioteki elogind.
 
 %prep
 %setup -q
-%patch0 -p1
 
 %build
 %meson build \
 	-Dhalt-path=/sbin/halt \
 	-Dkexec-path=/sbin/kexec \
+	-Dnologin-path=/sbin/nologin \
+	-Dpoweroff-path=/sbin/poweroff \
 	-Dreboot-path=/sbin/reboot \
+	-Dpamconfdir=/%{_sysconfdir}/pam.d \
 	-Dpamlibdir=/%{_lib}/security \
 	-Drootlibdir=%{_libdir} \
 	-Drootlibexecdir=%{_libexecdir}/%{name} \
 	-Dsplit-bin=true \
-	-Dsplit-usr=true
+	-Dsplit-usr=true \
+	-Dman=true
 
 %meson_build -C build
 
@@ -144,9 +146,6 @@ rm -rf $RPM_BUILD_ROOT
 # provided by udev-core
 %{__rm} $RPM_BUILD_ROOT/lib/udev/rules.d/70-power-switch.rules
 
-# packaged as %doc
-%{__rm} -r $RPM_BUILD_ROOT%{_docdir}/%{name}-%{version}
-
 %find_lang %{name}
 
 %clean
@@ -157,44 +156,50 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc NEWS README TODO src/libelogind/sd-bus/GVARIANT-SERIALIZATION
+%doc README.md TODO
 %dir %{_sysconfdir}/elogind
 %config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/elogind/logind.conf
+%config(noreplace) %verify(not md5 mtime size) %{_sysconfdir}/elogind/sleep.conf
 %config(noreplace) %verify(not md5 mtime size) /etc/pam.d/elogind-user
 /lib/udev/rules.d/70-uaccess.rules
 /lib/udev/rules.d/71-seat.rules
 /lib/udev/rules.d/73-seat-late.rules
 %attr(755,root,root) /%{_lib}/security/pam_elogind.so
+%attr(755,root,root) %{_bindir}/busctl
 %attr(755,root,root) %{_rootbindir}/loginctl
 %attr(755,root,root) %{_rootbindir}/elogind-inhibit
 %dir %{_libexecdir}/elogind
 %attr(755,root,root) %{_libexecdir}/elogind/elogind
 %attr(755,root,root) %{_libexecdir}/elogind/elogind-cgroups-agent
 %attr(755,root,root) %{_libexecdir}/elogind/elogind-uaccess-command
-%attr(755,root,root) %{_libexecdir}/elogind/libelogind-shared-%{version}.so
+%attr(755,root,root) %{_libdir}/elogind/libelogind-shared-%{version}.so
 %dir %{_libexecdir}/elogind/system-shutdown
 %dir %{_libexecdir}/elogind/system-sleep
 %{_datadir}/dbus-1/system-services/org.freedesktop.login1.service
 %{_datadir}/dbus-1/system.d/org.freedesktop.login1.conf
-%{_datadir}/factory/etc/pam.d/other
-%{_datadir}/factory/etc/pam.d/system-auth
 %{_datadir}/polkit-1/actions/org.freedesktop.login1.policy
+%{_mandir}/man1/busctl.1*
 %{_mandir}/man1/elogind-inhibit.1*
 %{_mandir}/man1/loginctl.1*
 %{_mandir}/man5/logind.conf.5*
-%{_mandir}/man7/elogind.directives.7*
-%{_mandir}/man7/elogind.index.7*
+%{_mandir}/man5/logind.conf.d.5*
+%{_mandir}/man5/org.freedesktop.login1.5*
+%{_mandir}/man5/sleep.conf.5*
+%{_mandir}/man5/sleep.conf.d.5*
+%{_mandir}/man7/elogind.journal-fields.7*
 %{_mandir}/man7/elogind.syntax.7*
+%{_mandir}/man7/elogind.time.7*
 %{_mandir}/man8/elogind.8*
 %{_mandir}/man8/pam_elogind.8*
 
 %files -n bash-completion-elogind
 %defattr(644,root,root,755)
+%{bash_compdir}/busctl
 %{bash_compdir}/loginctl
 
 %files -n zsh-completion-elogind
 %defattr(644,root,root,755)
-#%{zsh_compdir}/_elogind-inhibit
+%{zsh_compdir}/_busctl
 %{zsh_compdir}/_loginctl
 
 %files libs
