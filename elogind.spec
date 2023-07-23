@@ -186,6 +186,8 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man5/org.freedesktop.login1.5*
 %{_mandir}/man5/sleep.conf.5*
 %{_mandir}/man5/sleep.conf.d.5*
+%{_mandir}/man7/elogind.directives.7*
+%{_mandir}/man7/elogind.index.7*
 %{_mandir}/man7/elogind.journal-fields.7*
 %{_mandir}/man7/elogind.syntax.7*
 %{_mandir}/man7/elogind.time.7*
