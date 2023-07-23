@@ -18,18 +18,21 @@ BuildRequires:	gettext-tools
 #BuildRequires:	glib2-devel >= 1:2.22.0
 BuildRequires:	gperf
 BuildRequires:	libcap-devel
+BuildRequires:	libmount-devel >= 2.30
 BuildRequires:	libselinux-devel >= 2.1.9
 BuildRequires:	m4
-BuildRequires:	meson >= 0.44
+BuildRequires:	meson >= 0.53.2
 BuildRequires:	ninja
 BuildRequires:	pam-devel >= 1:1.1.2
 BuildRequires:	pcre2-8-devel
+BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.727
 BuildRequires:	udev-devel >= 1:185
 BuildConflicts:	polkit-devel < 0.106
 Requires:	%{name}-libs = %{version}-%{release}
 Requires:	dbus >= 1.4.0
 Requires:	glib2 >= 1:2.22.0
+Requires:	libmount >= 2.30
 Requires:	pam >= 1:1.3.0-3
 Requires:	udev-core >= 1:185
 Conflicts:	systemd
