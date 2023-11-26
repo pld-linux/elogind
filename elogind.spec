@@ -2,7 +2,7 @@ Summary:	Elogind User, Seat and Session Manager
 Summary(pl.UTF-8):	Elogind - zarządca użytkowników, stanowisk i sesji
 Name:		elogind
 Version:	252.9
-Release:	1
+Release:	2
 License:	LGPL v2.1+
 Group:		Daemons
 # Source0Download: https://github.com/elogind/elogind/releases
@@ -175,6 +175,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libexecdir}/elogind/elogind
 %attr(755,root,root) %{_libexecdir}/elogind/elogind-cgroups-agent
 %attr(755,root,root) %{_libexecdir}/elogind/elogind-uaccess-command
+%dir %{_libdir}/elogind
 %attr(755,root,root) %{_libdir}/elogind/libelogind-shared-%{version}.so
 %dir %{_libexecdir}/elogind/system-shutdown
 %dir %{_libexecdir}/elogind/system-sleep
