@@ -1,17 +1,19 @@
 Summary:	Elogind User, Seat and Session Manager
 Summary(pl.UTF-8):	Elogind - zarządca użytkowników, stanowisk i sesji
 Name:		elogind
-Version:	252.9
-Release:	2
+Version:	252.23
+Release:	1
 License:	LGPL v2.1+
 Group:		Daemons
 # Source0Download: https://github.com/elogind/elogind/releases
 Source0:	https://github.com/elogind/elogind/archive/v%{version}/%{name}-%{version}.tar.gz
-# Source0-md5:	2be2c43298e2fc41c5bee33dde605f01
+# Source0-md5:	7e93e0df7348edac3c9fb1223a7deda8
 URL:		https://github.com/elogind/elogind
 BuildRequires:	acl-devel
 BuildRequires:	audit-libs-devel
 BuildRequires:	dbus-devel >= 1.4.0
+BuildRequires:	docbook-dtd42-xml
+BuildRequires:	docbook-dtd45-xml
 BuildRequires:	gcc >= 5:3.2
 BuildRequires:	gettext-tools
 # checked, but finally not used
@@ -25,6 +27,7 @@ BuildRequires:	meson >= 0.53.2
 BuildRequires:	ninja
 BuildRequires:	pam-devel >= 1:1.1.2
 BuildRequires:	pcre2-8-devel
+BuildRequires:	python3-lxml
 BuildRequires:	rpm-build >= 4.6
 BuildRequires:	rpmbuild(macros) >= 1.727
 BuildRequires:	udev-devel >= 1:185
