@@ -178,7 +178,9 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_libexecdir}/elogind/elogind
 %attr(755,root,root) %{_libexecdir}/elogind/elogind-cgroups-agent
 %attr(755,root,root) %{_libexecdir}/elogind/elogind-uaccess-command
+%if "%{_libexecdir}" != "%{_libdir}"
 %dir %{_libdir}/elogind
+%endif
 %attr(755,root,root) %{_libdir}/elogind/libelogind-shared-%{version}.so
 %dir %{_libexecdir}/elogind/system-shutdown
 %dir %{_libexecdir}/elogind/system-sleep
